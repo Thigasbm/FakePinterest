@@ -14,7 +14,6 @@ class FormLogin(FlaskForm):
         usuario = Usuario.query.filter_by(email=email.data).first()
         if not usuario:
             raise ValidationError("O usuário informado não está cadastrado")
-        self.usuario = usuario
     # falta validar a senha
 
 
