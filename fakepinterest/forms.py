@@ -24,7 +24,7 @@ class FormLogin(FlaskForm):
 class FormCriarConta(FlaskForm):
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     senha = PasswordField("Senha", validators=[DataRequired(), Length(4, 30)])
-    confirmacao_senha = PasswordField("Confirmar Senha", validators=[DataRequired()]) # , EqualTo("senha")
+    confirmacao_senha = PasswordField("Confirmar Senha", validators=[DataRequired(), EqualTo("senha")]) # , EqualTo("senha")
     nickname = StringField("Apelido", validators=[DataRequired()])
     botao_confirmacao = SubmitField("Cadastrar-se")
 
@@ -32,14 +32,10 @@ class FormCriarConta(FlaskForm):
         usuario = Usuario.query.filter_by(email=email.data).first()
         if usuario:
             raise ValidationError("E-mail já cadastrado, faça login para continuar")
-    def validate_confirmacao_senha(self, field):
-        if self.senha != self.confirmacao_senha:
-            raise ValidationError("Senhas não coincidem")
     def validate_nickname(self, nickname):
         nick = Usuario.query.filter_by(nickname=nickname.data).first()
         if nick:
             raise ValidationError("Apelido de usuário já existe")
-
 
 
 class FormFoto(FlaskForm):
