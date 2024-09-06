@@ -32,6 +32,9 @@ class FormCriarConta(FlaskForm):
         usuario = Usuario.query.filter_by(email=email.data).first()
         if usuario:
             raise ValidationError("E-mail já cadastrado, faça login para continuar")
+    def validate_confirmacao_senha(self, field):
+        if self.senha != self.confirmacao_senha:
+            raise ValidationError("Senhas não coincidem")
     def validate_nickname(self, nickname):
         nick = Usuario.query.filter_by(nickname=nickname.data).first()
         if nick:
