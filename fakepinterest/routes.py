@@ -17,7 +17,7 @@ def homepage():
     formLogin = FormLogin()
     if formLogin.validate_on_submit(): # se preencheu o formulário e está válido:
         usuario = Usuario.query.filter_by(email=formLogin.email.data).first() # procura pelo primeiro usuário com o login usado na validação
-        if usuario and bcrypt.check_password_hash(usuario.senha, formLogin.senha.data): # checa se o usuário existe. bcrypt: checa se o parametro 1 (senha hash do banco) é idêntico ao parametro 2 (senha digitada no formulario). retorna True or False
+        if usuario and bcrypt.check_password_hash(usuario.senha.encode("utf-8"), formLogin.senha.data): # checa se o usuário existe. bcrypt: checa se o parametro 1 (senha hash do banco) é idêntico ao parametro 2 (senha digitada no formulario). retorna True or False
             login_user(usuario)
             return redirect(url_for('perfil', id_usuario=usuario.id))
     return render_template('homepage.html', form=formLogin)
@@ -26,7 +26,7 @@ def homepage():
 def criarconta():
     formCriarConta = FormCriarConta()
     if formCriarConta.validate_on_submit(): # so valida se o usuario clicar no submit
-        senha = bcrypt.generate_password_hash(formCriarConta.senha.data)
+        senha = bcrypt.generate_password_hash(formCriarConta.senha.data).decode("utf-8")
         usuario = Usuario(nickname=formCriarConta.nickname.data,
                           senha=senha,
                           email=formCriarConta.email.data)
